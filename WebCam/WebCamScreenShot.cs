@@ -32,15 +32,16 @@ public class WebCamScreenShot : MonoBehaviour
         if (webCamTexture.width < 1 || webCamTexture.height < 1) throw new System.Exception("Invalid resolution");
     }
 
+    public static string PrependZeros(int digit, int length)
+    {
+        var str = digit.ToString();
+        while (str.Length < length) str = "0" + str;
+        return str;
+    }
+
     public void SaveToPNG()
     {
-        string zeros =
-            (fileCounter < 10000 ? "0000" :
-                (fileCounter < 1000 ? "000" :
-                    (fileCounter < 100 ? "00" :
-                        (fileCounter < 10 ? "0" : ""))));
-
-        string image_path = path + $"/{ fileNamePrefix + zeros + fileCounter }.png";
+        string image_path = path + $"/{ fileNamePrefix + PrependZeros(fileCounter, 5) + fileCounter }.png";
 
         byte[] data = ScreenshotWebcam( webCamTexture );
 
@@ -48,6 +49,7 @@ public class WebCamScreenShot : MonoBehaviour
 
         fileCounter ++ ;
     }
+    
     static byte[] ScreenshotWebcam(WebCamTexture wct)
     {
         Texture2D colorTex = new Texture2D(wct.width, wct.height, TextureFormat.RGBA32, false);
